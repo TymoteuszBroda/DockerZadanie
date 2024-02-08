@@ -38,3 +38,28 @@ async def delete_elf(elf_name: str):
         raise HTTPException(status_code=404, detail="Elf not found")
     del Database.elves[elf_name]
     return {"message": "Elf usunięty"}
+
+#======================================PACZKI===================================
+
+@app.get("/packages/", response_model=List[Package])
+async def get_packages():
+    return Database.packages.values()
+
+@app.post("/packages/")
+async def create_package(package: Package):
+    Database.packages[len(Database.packages) + 1] = package
+    return package
+
+@app.put("/packages/{package_id}")
+async def update_package(package_id: int, package: Package):
+    if package_id not in Database.packages:
+        raise HTTPException(status_code=404, detail="Package not found")
+    Database.packages[package_id] = package
+    return package
+
+@app.delete("/packages/{package_id}")
+async def delete_package(package_id: int):
+    if package_id not in Database.packages:
+        raise HTTPException(status_code=404, detail="Package not found")
+    del Database.packages[package_id]
+    return {"message": "Paczka usunięta"}
